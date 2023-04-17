@@ -11,17 +11,12 @@ class HomeController extends GetxController with StateMixin {
 
   final count = 0.obs;
   ApiConnect2 _apiConnect2 = ApiConnect2.instance;
-  RxList<String> listdata = [
-    "Fitur Login",
-    "Fitur Register",
-    "Error Register",
-    "Error Login",
-    "List User",
-    "CRUD"
-  ].obs;
+
+  RxList<dynamic> listusers = [].obs;
   @override
   void onInit() {
     super.onInit();
+    listuser();
   }
 
   @override
@@ -38,16 +33,58 @@ class HomeController extends GetxController with StateMixin {
 
   ontap(int index) {}
   Future<void> listuser() async {
+    change(null, status: RxStatus.loading());
     try {
-      Map<String, dynamic> response = await _apiConnect2.getData(
-        EndPoints.listuser,
-      );
-      if (response.containsKey("token")) {
-        Helper.showToast("Berhasil registrasi");
-        Get.offAllNamed(Routes.LOGIN);
+      Map<dynamic, dynamic> response =
+          await _apiConnect2.postData(EndPoints.listuser, {});
+      if (response["status"]) {
+        listusers.value = response["data"];
+        change(null, status: RxStatus.success());
       } else {
-        Helper.showToast(response["error"].toString());
+        change(null, status: RxStatus.error(response["message"].toString()));
       }
+    } on ApiErrors catch (e) {
+      dismissProgressDialog();
+      Helper.showToast(e.message.toString());
+    } catch (e) {
+      change(null, status: RxStatus.error("Terjadi kesalahan"));
+    }
+  }
+
+  Future<void> add() async {
+    final data = await Get.toNamed(Routes.ADD_USER);
+    if (data != null) {
+      listuser();
+    }
+  }
+
+  Future<void> detail(int index) async {
+    print("object");
+    Map data = {
+      "id": listusers[index]["id"].toString(),
+      "nama": listusers[index]["nama"].toString(),
+      "jabatan": listusers[index]["jabatan"].toString(),
+    };
+    final mydata = await Get.toNamed(Routes.ADD_USER, arguments: data);
+    if (mydata != null) {
+      listuser();
+    }
+  }
+
+  Future<void> delete(int index) async {
+    showProgressDialog();
+    try {
+      Map<String, dynamic> response = await _apiConnect2.postData(
+        EndPoints.deleteexampleuser,
+        {
+          "id": listusers[index]["id"].toString(),
+        },
+      );
+      dismissProgressDialog();
+      if (response["status"]) {
+        listuser();
+      }
+      Helper.showToast(response["message"].toString());
     } on ApiErrors catch (e) {
       dismissProgressDialog();
       Helper.showToast(e.message.toString());

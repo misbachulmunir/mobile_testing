@@ -13,7 +13,7 @@ class ApiConnect2 extends GetConnect {
   ApiConnect2._() {
     logPrint = print;
 
-    httpClient.baseUrl = getBaseUrl();
+    httpClient.baseUrl = getBaseUrl2();
     httpClient.defaultContentType = "application/json";
     httpClient.timeout = const Duration(seconds: 10);
     httpClient.maxAuthRetries = 3;

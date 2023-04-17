@@ -14,5 +14,5 @@ String getBaseUrl() {
 }
 
 String getBaseUrl2() {
-  return "https://gorest.co.in/public/v2/";
+  return "https://koperasi-online.web.id/toko_buku/api/example/";
 }
