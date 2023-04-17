@@ -17,18 +17,22 @@ class LoginController extends GetxController {
   final count = 0.obs;
   @override
   void onInit() {
-    super.onInit();
     c_username.text = "eve.holt@reqres.in";
     c_password.text = "cityslicka";
+    super.onInit();
   }
 
   @override
   void onReady() {
+    c_username.text = "eve.holt@reqres.in";
+    c_password.text = "cityslicka";
     super.onReady();
   }
 
   @override
   void onClose() {
+    c_username.dispose();
+    c_password.dispose();
     super.onClose();
   }
 
