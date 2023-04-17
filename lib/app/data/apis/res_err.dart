@@ -18,7 +18,7 @@ extension ResErr<T> on Response<T> {
 
     if (status.code == HttpStatus.badRequest) {
       final res = jsonDecode(bodyString!);
-      throw ServerResError(res.toString());
+      throw ServerResError(res["error"]);
     }
 
     if (status.code == HttpStatus.requestTimeout) {
